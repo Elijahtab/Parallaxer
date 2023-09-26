@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public GameObject aiController;
+    private OpenAIControllerScript aiControllerscript;
     public float moveSpeed = 5f;
     public float jumpForce = 10f;
     private float verticalSpeed;
@@ -18,7 +20,9 @@ public class PlayerController : MonoBehaviour
     private float timeElapsed;
     private Vector2 previousPosition;
 
-    
+    private string name;
+    private string prompt;
+    private string starter;
     
     void Start()
     {
@@ -26,7 +30,7 @@ public class PlayerController : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
 
         dualWorldScript = FindObjectOfType<DualWorld>();
-        
+        aiControllerscript = aiController.GetComponent<OpenAIControllerScript>();
 
     }
 
@@ -79,5 +83,21 @@ public class PlayerController : MonoBehaviour
             }               
             
         }
+
+    
+
+    private void OnCollisionEnter2D(Collision2D collision2d)
+    {
+        if (collision2d.gameObject.tag == "Character")
+        {
+            if (collision2d.gameObject.name == "Ralph")
+            {
+                name = "Ralph";
+                prompt = "You are Ralph talking to a person";
+                starter = "Prompt";
+            }
+                aiControllerscript.StartConversation(prompt, starter, name);
+        }
+    }
     
 }
