@@ -92,11 +92,17 @@ public class PlayerController : MonoBehaviour
         {
             if (collision2d.gameObject.name == "Ralph")
             {
-                name = "Ralph";
-                prompt = "You are Ralph talking to a person";
-                starter = "Prompt";
+                prompt = "You are Ralph talking to the main character. Your goal is to help him understand in a subtle way that the world switches between two modes that help him do the parkour necessary to complete the levels. The player has to press space to engage this mode. Keep your responses relatively short while conveying the necessary information.";
+                starter = "Ralph is an oddly shaped man, who seems to be wearing a suit of a material not quite cloth and not quite metal, but somehow both. He curiously looks you up and down and says 'Hey you don't seem to know where you're going'";
             }
-                aiControllerscript.StartConversation(prompt, starter, name);
+            else if(collision2d.gameObject.name == "Sally")
+            {
+                prompt = "You are Sally talking to the main character. You are trying to tell them more about the world they are in: a never ending dreary parkour in which space follows the player and is fully infinite. Keep your responses a bit short and make them depressing.";
+                starter = "Sally looks up at you from her short stature. Then looks back down. She looks defeated but nothing here could have defeated her, strange.";
+            }
+            animator.SetFloat("Speed", 0);
+            aiControllerscript.StartConversation(prompt, starter, collision2d.gameObject.name);
+            PlayerController playerController = GetComponent<PlayerController>();
         }
     }
     

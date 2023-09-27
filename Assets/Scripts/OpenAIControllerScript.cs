@@ -6,8 +6,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-using System;
-
+using System;   
 
 
 public class OpenAIControllerScript : MonoBehaviour
@@ -17,8 +16,13 @@ public class OpenAIControllerScript : MonoBehaviour
     public TMP_InputField inputField;
     public Button okButton;
 
+    public GameObject player;
+    public GameObject gameStateManager;
+
     private OpenAIAPI api;
     private List<ChatMessage> messages;
+    PlayerController playerController; 
+    DualWorld dualWorld;
 
     // Start is called before the first frame update
     void Start()
@@ -27,11 +31,16 @@ public class OpenAIControllerScript : MonoBehaviour
         api = new OpenAIAPI(Environment.GetEnvironmentVariable("OPENAI_API_KEY", EnvironmentVariableTarget.User));
         okButton.onClick.AddListener(() => GetResponse());
         string name = "Name";
+        //get playercontroller script from player gameobject
+        playerController = player.GetComponent<PlayerController>();
+        dualWorld = gameStateManager.GetComponent<DualWorld>();
     }
 
     
     public void StartConversation(string prompt, string starter, string ainame)
     {
+        playerController.enabled = false;
+        dualWorld.enabled = false;
         chatPanel.SetActive(true);
 
         messages = new List<ChatMessage> {
@@ -81,7 +90,7 @@ public class OpenAIControllerScript : MonoBehaviour
         {
             Model = Model.ChatGPTTurbo,
             Temperature = .5,
-            MaxTokens = 300,
+            MaxTokens = 100,
             Messages = messages
         });
 
@@ -95,6 +104,12 @@ public class OpenAIControllerScript : MonoBehaviour
 
         okButton.enabled = true;
         
+    }
+    public void ExitConversation()
+    {
+        chatPanel.SetActive(false);
+        playerController.enabled = true;
+        dualWorld.enabled = true;
     }
 
 
